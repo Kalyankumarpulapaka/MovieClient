@@ -13,7 +13,6 @@ import { removeFavorite } from "../redux/features/userSlice";
 
 const FavoriteItem = ({ media, onRemoved }) => {
   const dispatch = useDispatch();
-
   const [onRequest, setOnRequest] = useState(false);
 
   const onRemove = async () => {
@@ -30,20 +29,22 @@ const FavoriteItem = ({ media, onRemoved }) => {
     }
   };
 
-  return (<>
-    <MediaItem media={media} mediaType={media.mediaType} />
-    <LoadingButton
-      fullWidth
-      variant="contained"
-      sx={{ marginTop: 2 }}
-      startIcon={<DeleteIcon />}
-      loadingPosition="start"
-      loading={onRequest}
-      onClick={onRemove}
-    >
-      remove
-    </LoadingButton>
-  </>);
+  return (
+    <>
+      <MediaItem media={media} mediaType={media.mediaType} />
+      <LoadingButton
+        fullWidth
+        variant="contained"
+        sx={{ marginTop: 2 }}
+        startIcon={<DeleteIcon />}
+        loadingPosition="start"
+        loading={onRequest}
+        onClick={onRemove}
+      >
+        remove
+      </LoadingButton>
+    </>
+  );
 };
 
 const FavoriteList = () => {
@@ -53,7 +54,6 @@ const FavoriteList = () => {
   const [count, setCount] = useState(0);
 
   const dispatch = useDispatch();
-
   const skip = 8;
 
   useEffect(() => {
@@ -71,7 +71,7 @@ const FavoriteList = () => {
     };
 
     getFavorites();
-  }, []);
+  }, [dispatch]); // Added dispatch to the dependency array to fix ESLint warning
 
   const onLoadMore = () => {
     setFilteredMedias([...filteredMedias, ...[...medias].splice(page * skip, skip)]);

@@ -107,7 +107,7 @@ const ReviewList = () => {
       dispatch(setGlobalLoading(true));
       const { response, err } = await reviewApi.getList();
       dispatch(setGlobalLoading(false));
-
+  
       if (err) toast.error(err.message);
       if (response) {
         setCount(response.length);
@@ -115,9 +115,10 @@ const ReviewList = () => {
         setFilteredReviews([...response].splice(0, skip));
       }
     };
-
+  
     getReviews();
-  }, []);
+  }, [dispatch]); // Add 'dispatch' to the dependency array
+  
 
   const onLoadMore = () => {
     setFilteredReviews([...filteredReviews, ...[...reviews].splice(page * skip, skip)]);

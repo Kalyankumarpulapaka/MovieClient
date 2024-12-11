@@ -12,7 +12,7 @@ import { setGlobalLoading } from "../redux/features/globalLoadingSlice";
 
 const PersonDetail = () => {
   const { personId } = useParams();
-  const [person, setPerson] = useState();
+  const [person, setPerson] = useState(null); // Initially set to null
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -25,53 +25,57 @@ const PersonDetail = () => {
       if (response) setPerson(response);
     };
 
-    getPerson();
-  }, [personId]);
+    if (personId) {
+      getPerson();
+    }
+  }, [personId, dispatch]); // Added dispatch to dependencies array
+
+  if (!person) return null; // Early return if person is not fetched yet
 
   return (
     <>
       <Toolbar />
-      {person && (
-        <>
-          <Box sx={{ ...uiConfigs.style.mainContent }}>
-            <Box sx={{
-              position: "relative",
-              display: "flex",
-              flexDirection: { xs: "column", md: "row" }
-            }}>
-              <Box sx={{
-                width: { xs: "50%", md: "20%" }
-              }}>
-                <Box sx={{
-                  paddingTop: "160%",
-                  backgroundSize: "cover",
-                  backgroundPosition: "center",
-                  backgroundColor: "darkgrey",
-                  backgroundImage: `url(${tmdbConfigs.posterPath(person.profile_path)})`
-                }} />
-              </Box>
-              <Box sx={{
-                width: { xs: "100%", md: "80%" },
-                padding: { xs: "1rem 0", md: "1rem 2rem" }
-              }}>
-                <Stack spacing={2}>
-                  <Typography variant="h5" fontWeight="700">
-                    {`${person.name} (${person.birthday && person.birthday.split("-")[0]}`}
-                    {person.deathday && ` - ${person.deathday && person.deathday.split("-")[0]}`}
-                    {")"}
-                  </Typography>
-                  <Typography sx={{ ...uiConfigs.style.typoLines(10) }}>
-                    {person.biography}
-                  </Typography>
-                </Stack>
-              </Box>
-            </Box>
-            <Container header="medias">
-              <PersonMediaGrid personId={personId} />
-            </Container>
+      <Box sx={{ ...uiConfigs.style.mainContent }}>
+        <Box
+          sx={{
+            position: "relative",
+            display: "flex",
+            flexDirection: { xs: "column", md: "row" },
+          }}
+        >
+          <Box sx={{ width: { xs: "50%", md: "20%" } }}>
+            <Box
+              sx={{
+                paddingTop: "160%",
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                backgroundColor: "darkgrey",
+                backgroundImage: `url(${tmdbConfigs.posterPath(person.profile_path)})`,
+              }}
+            />
           </Box>
-        </>
-      )}
+          <Box
+            sx={{
+              width: { xs: "100%", md: "80%" },
+              padding: { xs: "1rem 0", md: "1rem 2rem" },
+            }}
+          >
+            <Stack spacing={2}>
+              <Typography variant="h5" fontWeight="700">
+                {`${person.name} (${person.birthday && person.birthday.split("-")[0]}`}
+                {person.deathday && ` - ${person.deathday && person.deathday.split("-")[0]}`}
+                {")"}
+              </Typography>
+              <Typography sx={{ ...uiConfigs.style.typoLines(10) }}>
+                {person.biography}
+              </Typography>
+            </Stack>
+          </Box>
+        </Box>
+        <Container header="Medias">
+          <PersonMediaGrid personId={personId} />
+        </Container>
+      </Box>
     </>
   );
 };
