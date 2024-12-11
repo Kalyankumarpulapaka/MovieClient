@@ -1,3 +1,2 @@
-# BertFlix (MERN-MOVIE)
+#MovieFlix (MERN-MOVIE)
 
-Fronted (Client)
